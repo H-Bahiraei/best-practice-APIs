@@ -53,10 +53,7 @@ public abstract class AbstractCacheService<K extends Long, V extends BaseEntity>
     }
 
 
-    protected Boolean isExpired(Long key) {
-        LocalDateTime expirationTime = this.cache.get(key).getCreatedAt().plus(DEFAULT_CACHE_TIMEOUT, ChronoUnit.MILLIS); // ***
-        return LocalDateTime.now().isAfter(expirationTime);
-    }
+
 
     protected void clean() {
         for (Long key : this.getExpiredKeys()) {
@@ -70,7 +67,11 @@ public abstract class AbstractCacheService<K extends Long, V extends BaseEntity>
                 .collect(Collectors.toSet()); //***
     }
 
-
+    protected Boolean isExpired(Long key) {
+        LocalDateTime expirationTime = this.cache.get(key).getCreatedAt()
+                .plus(DEFAULT_CACHE_TIMEOUT, ChronoUnit.MILLIS); // ***
+        return LocalDateTime.now().isAfter(expirationTime);
+    }
     protected Map<Long, V> fetchAll() {
         return this.cache;
     }
